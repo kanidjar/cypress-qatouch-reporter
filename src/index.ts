@@ -9,9 +9,9 @@ import { spawn } from 'child_process';
  * Manages cypress/mocha test runner event and publishes results to QA Touch
  */
 export class CypressQaTouch {
-    private __reporterOptions: ReporterOptions;
+    private __reporterOptions: ReporterOptions | undefined;
 
-    constructor(runner: Runner, options: { reporterOptions: ReporterOptions }) {
+    constructor(runner: Runner, options: { reporterOptions?: ReporterOptions }) {
         this.__reporterOptions = options.reporterOptions;
 
         this.validateReporterOptions(['domain', 'apiToken', 'projectKey', 'testRunKey']);
@@ -33,14 +33,14 @@ export class CypressQaTouch {
      * Validate the existence of options
      * @param {string[]} options options to be validated
      */
-     validateReporterOptions(options: string[]) {
+     public validateReporterOptions(options: string[]): void {
         if (!this.__reporterOptions) {
             throw new Error('Missing reporterOptions in cypress config');
         }
 
         options.forEach(
             (option: string) => {
-                if (!this.__reporterOptions[option]) {
+                if (!this.__reporterOptions?.[option]) {
                     throw new Error('Missing ' + option + ' value. Please update reporterOptions in cypress.json');
                 }
             }
@@ -53,8 +53,8 @@ export class CypressQaTouch {
      * @param {string} status the status of the test
      * @param {string} title the title of the test
      */
-    push(status: string, title: string) {
-        const testRunResultKey = /^\[QATouch\-([A-Za-z0-9]+)\]/.exec(title)?.[1];
+    public push(status: string, title: string): void {
+        const testRunResultKey = /^\[QATouch-([A-Za-z0-9]+)\]/.exec(title)?.[1];
 
         if (testRunResultKey) {
             spawn('node', [`${__dirname}/child_processes/push.js`], {

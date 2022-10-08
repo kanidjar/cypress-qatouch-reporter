@@ -1,38 +1,46 @@
 import axios from 'axios';
 import {} from 'colors';
+import { exit } from 'process';
 import { ReporterOptions } from '../interfaces/reporter-options.interface';
 import { Result } from '../interfaces/result.interface';
+import { PushResponse } from '../interfaces/api/push.response';
 
-const result: Result = JSON.parse(process.env.result as string);
-const reporterOptions: ReporterOptions = JSON.parse(process.env.reporterOptions as string) as ReporterOptions;
+const { result, reporterOptions } = process.env;
+
+if (result === undefined || reporterOptions === undefined) {
+    exit(1);
+}
+
+const { projectKey, testRunKey, apiToken, domain } = JSON.parse(reporterOptions) as ReporterOptions;
+const { status, testRunResultKey } = JSON.parse(result) as Result
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '1';
 
-(async () => {
-    const response = await axios({
+await (async () => {
+    const data: PushResponse = await axios({
         method: 'PATCH',
         url: 'https://api.qatouch.com/api/v1/testRunResults/status',
         params: {
-            status: result.status,
-            project: reporterOptions.projectKey,
-            test_run: reporterOptions.testRunKey,
-            run_result: result.testRunResultKey,
+            status,
+            project: projectKey,
+            test_run: testRunKey,
+            run_result: testRunResultKey,
             comments: 'Published from Cypress'
         },
         headers: {
-            'api-token': reporterOptions.apiToken,
-            domain: reporterOptions.domain,
+            'api-token': apiToken,
+            domain,
             'Content-Type': 'application/json'
         }
     })
-        .then(response => response.data)
-        .catch(error => error);
+    .then(response => (response.data as PushResponse))
+    .catch(() => ({ success: false}))
 
-    if (!response?.success) {
+    if (!data.success) {
         console.log(
-            `[QATouch] An error occurred while updating test result "${result.testRunResultKey}" with status "${
-                result.status
-            }": ${JSON.stringify(response)}"`.red
+            `[QATouch] An error occurred while updating test result "${testRunResultKey}" with status "${
+                status
+            }": ${JSON.stringify(data)}"`.red
         );
     }
 })();
