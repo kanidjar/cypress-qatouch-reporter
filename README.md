@@ -3,10 +3,11 @@
 Push your Cypress test results into QATouch
 </h3>
 
-[![build](https://github.com/kanidjar/cypress-qatouch-reporter/actions/workflows/build.yaml/badge.svg?branch=main)](https://github.com/kanidjar/cypress-qatouch-reporter/actions/workflows/build.yaml)
-[![test](https://github.com/kanidjar/cypress-qatouch-reporter/actions/workflows/test.yaml/badge.svg?branch=main)](https://github.com/kanidjar/cypress-qatouch-reporter/actions/workflows/test.yaml)
-[![lint](https://github.com/kanidjar/cypress-qatouch-reporter/actions/workflows/lint.yaml/badge.svg?branch=main)](https://github.com/kanidjar/cypress-qatouch-reporter/actions/workflows/lint.yaml)
-
+<div align="center">
+<a href="https://github.com/kanidjar/cypress-qatouch-reporter/actions/workflows/build.yaml"><img src="https://github.com/kanidjar/cypress-qatouch-reporter/actions/workflows/build.yaml/badge.svg?branch=main" /></a>
+<a href="https://github.com/kanidjar/cypress-qatouch-reporter/actions/workflows/test.yaml"><img src="https://github.com/kanidjar/cypress-qatouch-reporter/actions/workflows/test.yaml/badge.svg?branch=main" /></a>
+<a href="https://github.com/kanidjar/cypress-qatouch-reporter/actions/workflows/lint.yaml"><img src="https://github.com/kanidjar/cypress-qatouch-reporter/actions/workflows/lint.yaml/badge.svg?branch=main" /></a>
+</div>
 ## Introduction
 
 This Cypress plugin allows you to push your Cypress test results into QATouch.
