@@ -1,4 +1,4 @@
 export interface Result {
-    status: string;
-    testRunResultKey: string;
+  status: string;
+  testRunResultKey: string;
 }

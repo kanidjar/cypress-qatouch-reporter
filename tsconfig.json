@@ -1,16 +1,16 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "ES2022",
+    "target": "ESNext",
+    "module": "CommonJS",
     "rootDir": ".",
     "baseUrl": ".",
     "moduleResolution": "node",
     "types": ["node"],
-    "declaration": true,
+    "declaration": false,
     "sourceMap": true,
     "outDir": "./dist",
     "removeComments": true,
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitAny": true,
@@ -26,8 +26,8 @@
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": false,
-    "skipLibCheck": true,
+    "skipLibCheck": true
   },
-  "files": ["src/index.ts", "src/processes/push.ts"],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
 }
