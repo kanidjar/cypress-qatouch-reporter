@@ -13,7 +13,7 @@ Push your Cypress test results into QATouch
 
 This Cypress plugin allows you to push your Cypress test results into QATouch.
 
-## Why this plugin?
+### Why this plugin?
 
 Because [the official one](https://www.npmjs.com/package/cypress-qatouch-reporter) is not maintained anylonger and the bulk API it relies on is too unstable (random 500 errors)
 
