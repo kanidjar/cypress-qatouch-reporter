@@ -8,7 +8,8 @@ Push your Cypress test results into QATouch
 <a href="https://github.com/kanidjar/cypress-qatouch-reporter/actions/workflows/test.yaml"><img src="https://github.com/kanidjar/cypress-qatouch-reporter/actions/workflows/test.yaml/badge.svg?branch=main" /></a>
 <a href="https://github.com/kanidjar/cypress-qatouch-reporter/actions/workflows/lint.yaml"><img src="https://github.com/kanidjar/cypress-qatouch-reporter/actions/workflows/lint.yaml/badge.svg?branch=main" /></a>
 </div>
-## Introduction
+
+### Introduction
 
 This Cypress plugin allows you to push your Cypress test results into QATouch.
 
