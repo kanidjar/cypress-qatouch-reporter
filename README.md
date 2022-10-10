@@ -3,7 +3,9 @@
 Push your Cypress test results into QATouch
 </h3>
 
-[![build](https://github.com/kanidjar/cypress-qatouch-reporter/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/kanidjar/cypress-qatouch-reporter/actions/workflows/ci.yaml)
+[![build](https://github.com/kanidjar/cypress-qatouch-reporter/actions/workflows/build.yaml/badge.svg?branch=main)](https://github.com/kanidjar/cypress-qatouch-reporter/actions/workflows/build.yaml)
+[![test](https://github.com/kanidjar/cypress-qatouch-reporter/actions/workflows/test.yaml/badge.svg?branch=main)](https://github.com/kanidjar/cypress-qatouch-reporter/actions/workflows/test.yaml)
+[![lint](https://github.com/kanidjar/cypress-qatouch-reporter/actions/workflows/lint.yaml/badge.svg?branch=main)](https://github.com/kanidjar/cypress-qatouch-reporter/actions/workflows/lint.yaml)
 
 ## Introduction
 
