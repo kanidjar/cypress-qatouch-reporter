@@ -27,7 +27,9 @@ const config = {
         },
         {
           from: "package.json",
-          to: ".",
+        },
+        {
+          from: "./*.(md|txt)",
         },
       ],
     }),
