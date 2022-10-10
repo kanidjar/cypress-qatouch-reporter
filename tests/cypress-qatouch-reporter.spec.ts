@@ -1,4 +1,4 @@
-import { CypressQaTouchReporter } from "../src/cypress-qatouch-reporter";
+import CypressQaTouchReporter from "../src/cypress-qatouch-reporter";
 import { Runner, Suite, Test } from "mocha";
 import { ReporterOptions } from "../src/interfaces/reporter-options.interface";
 import { describe, it, expect, test, jest } from "@jest/globals";

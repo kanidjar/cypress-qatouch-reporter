@@ -5,5 +5,5 @@ module.exports = {
     "^.+\\.(ts|js|html)$": ["ts-jest", { tsconfig: "./tsconfig.spec.json" }],
   },
   collectCoverage: true,
-  collectCoverageFrom: ["src/**", "!src/processes/*", "!src/index.ts"],
+  collectCoverageFrom: ["src/**", "!src/processes/*", "!src/index.js"],
 };
