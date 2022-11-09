@@ -80,7 +80,7 @@ export default class CypressQaTouchReporter {
       })).unref();
     } else {
       console.warn(
-        `[QATouch] The test "${title}" does not seem to have a test result key "[QATouch-XXX])"`
+        `[QATouch] The test "${title}" does not seem to have a test result key "[QATouch-XXX]"`
       );
     }
 
