@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/dot-notation */
 import CypressQaTouchReporter from "../src/cypress-qatouch-reporter";
 import { Runner, Suite, Test } from "mocha";
 import { ReporterOptions } from "../src/interfaces/reporter-options.interface";
 import { describe, it, expect, test, jest } from "@jest/globals";
 import { Status } from "../src/enums/status.enum";
+import path from "path";
 
 describe("Cypress QATouch reporter", () => {
   const reporterOptions: ReporterOptions = {
@@ -10,6 +12,7 @@ describe("Cypress QATouch reporter", () => {
     apiToken: "xxxxx",
     projectKey: "my-project-key",
     testRunKey: "my-test-run-key",
+    screenshotsFolder: ".",
   };
 
   const runner: Runner = new Runner(new Suite("Test suite"), false);
@@ -98,6 +101,34 @@ describe("Cypress QATouch reporter", () => {
       expect(console.warn).toHaveBeenCalled();
       expect(process).toBeNull();
       jest.restoreAllMocks();
+    });
+  });
+
+  describe("Get screenshot", () => {
+    it("should return a screenshot if the status is failed", () => {
+      const file = reporter["_getScreenshot"](
+        new Test(path.basename(__filename)),
+        Status.failed
+      );
+
+      expect(file).not.toBeNull();
+    });
+
+    it("should not return a screenshot if the status is failed but no file is found", () => {
+      const test = new Test(path.basename(__filename));
+      test.parent = new Suite("Foo");
+      const file = reporter["_getScreenshot"](test, Status.failed);
+
+      expect(file).toBeNull();
+    });
+
+    it("should not return a screenshot if the status is passed", () => {
+      const file = reporter["_getScreenshot"](
+        new Test(path.basename(__filename)),
+        Status.passed
+      );
+
+      expect(file).toBeNull();
     });
   });
 });
