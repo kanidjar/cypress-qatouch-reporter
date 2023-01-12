@@ -65,8 +65,8 @@ export default class CypressQaTouchReporter {
    * @param test The test
    * @returns first screenshot found or null
    */
-  private _getScreenshot(test: Test): string | null {
-    if (!this._reporterOptions?.screenshotsFolder) {
+  private _getScreenshot(test: Test, status: Status): string | null {
+    if (!this._reporterOptions?.screenshotsFolder || status === Status.passed) {
       return null;
     }
 
@@ -76,10 +76,10 @@ export default class CypressQaTouchReporter {
 
     return (
       glob
-        .sync(`${this._reporterOptions.screenshotsFolder}/**/*.png`)
+        .sync(`${this._reporterOptions.screenshotsFolder}/**/*.*`)
         .map((file) => file)
         .filter((file) => file.includes(filename))
-        .at(0) ?? null
+        .pop() ?? null
     );
   }
 
@@ -92,8 +92,9 @@ export default class CypressQaTouchReporter {
   public push(test: Test, status: Status): ChildProcess | null {
     const testRunResultKey = this.TITLE_REGEXP.exec(test.title)?.[1];
     let childProcess: ChildProcess | null = null;
+    let screenshot = null;
 
-    const screenshot = this._getScreenshot(test);
+    screenshot = this._getScreenshot(test, status);
 
     if (testRunResultKey) {
       (childProcess = spawn(this._process.command, this._process.args, {
