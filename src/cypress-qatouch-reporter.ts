@@ -1,7 +1,11 @@
+/// <reference types="cypress" />
+
 import { Runner, Test } from "mocha";
 import { ReporterOptions } from "./interfaces/reporter-options.interface";
 import { ChildProcess, spawn } from "child_process";
 import { Process } from "./interfaces/process.interface";
+import { Status } from "./enums/status.enum";
+import { glob } from "glob";
 
 /**
  * CypressQaTouchReporter class
@@ -9,8 +13,8 @@ import { Process } from "./interfaces/process.interface";
  * Manages cypress/mocha test runner event and publish results to QA Touch
  */
 export default class CypressQaTouchReporter {
-  private __reporterOptions: ReporterOptions | undefined;
-  private __process: Process = {
+  private _reporterOptions: ReporterOptions | undefined;
+  private _process: Process = {
     command: "node",
     args: [`${__dirname}/processes/push.process.js`],
   };
@@ -18,7 +22,7 @@ export default class CypressQaTouchReporter {
   private readonly TITLE_REGEXP = /^\[QATouch-([A-Za-z0-9]+)\]/;
 
   constructor(runner: Runner, options: { reporterOptions?: ReporterOptions }) {
-    this.__reporterOptions = options.reporterOptions;
+    this._reporterOptions = options.reporterOptions;
 
     this.validateReporterOptions([
       "domain",
@@ -28,11 +32,11 @@ export default class CypressQaTouchReporter {
     ]);
 
     runner.on(Runner.constants.EVENT_TEST_PASS, (test: Test) => {
-      this.push("passed", test.title);
+      this.push(test, Status.passed);
     });
 
     runner.on(Runner.constants.EVENT_TEST_FAIL, (test: Test) => {
-      this.push("failed", test.title);
+      this.push(test, Status.failed);
     });
   }
 
@@ -41,12 +45,12 @@ export default class CypressQaTouchReporter {
    * @param {string[]} options options to be validated
    */
   public validateReporterOptions(options: string[]): void {
-    if (!this.__reporterOptions) {
+    if (!this._reporterOptions) {
       throw new Error("Missing reporterOptions in cypress config");
     }
 
     options.forEach((option: string) => {
-      if (!this.__reporterOptions?.[option]) {
+      if (!this._reporterOptions?.[option]) {
         throw new Error(
           "Missing " +
             option +
@@ -57,30 +61,56 @@ export default class CypressQaTouchReporter {
   }
 
   /**
+   *
+   * @param test The test
+   * @returns first screenshot found or null
+   */
+  private _getScreenshot(test: Test): string | null {
+    if (!this._reporterOptions?.screenshotsFolder) {
+      return null;
+    }
+
+    const filename = `${test.parent ? `${test.parent.title} -- ` : ""}${
+      test.title
+    }`;
+
+    return (
+      glob
+        .sync(`${this._reporterOptions.screenshotsFolder}/**/*.png`)
+        .map((file) => file)
+        .filter((file) => file.includes(filename))
+        .at(0) ?? null
+    );
+  }
+
+  /**
    * Initialize child process to push results to QATouch
    *
-   * @param {string} status the status of the test
-   * @param {string} title the title of the test
+   * @param {Test} test the test
+   * @param {Status} status the status of the test
    */
-  public push(status: "passed" | "failed", title: string): ChildProcess | null {
-    const testRunResultKey = this.TITLE_REGEXP.exec(title)?.[1];
+  public push(test: Test, status: Status): ChildProcess | null {
+    const testRunResultKey = this.TITLE_REGEXP.exec(test.title)?.[1];
     let childProcess: ChildProcess | null = null;
 
+    const screenshot = this._getScreenshot(test);
+
     if (testRunResultKey) {
-      (childProcess = spawn(this.__process.command, this.__process.args, {
+      (childProcess = spawn(this._process.command, this._process.args, {
         detached: true,
         stdio: "inherit",
         env: Object.assign(process.env, {
-          reporterOptions: JSON.stringify(this.__reporterOptions),
+          reporterOptions: JSON.stringify(this._reporterOptions),
           result: JSON.stringify({
             testRunResultKey,
             status,
+            screenshot,
           }),
         }),
       })).unref();
     } else {
       console.warn(
-        `[QATouch] The test "${title}" does not seem to have a test result key "[QATouch-XXX]"`
+        `[QATouch] The test "${test.title}" does not seem to have a test result key "[QATouch-XXX]"`
       );
     }
 

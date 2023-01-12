@@ -4,4 +4,5 @@ export interface ReporterOptions {
   apiToken?: string;
   projectKey?: string;
   testRunKey?: string;
+  screenshotsFolder?: string;
 }

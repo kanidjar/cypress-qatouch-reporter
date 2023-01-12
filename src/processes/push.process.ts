@@ -19,10 +19,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "1";
 
   const result = JSON.parse(process.env.result) as Result;
 
-  return await new HttpService(reporterOptions).updateStatus(
-    result.status,
-    result.testRunResultKey
-  );
+  return await new HttpService(reporterOptions).updateStatus(result);
 })()
   .then(() => exit())
   .catch(() => exit(1));

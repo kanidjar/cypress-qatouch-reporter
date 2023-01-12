@@ -2,6 +2,7 @@ import CypressQaTouchReporter from "../src/cypress-qatouch-reporter";
 import { Runner, Suite, Test } from "mocha";
 import { ReporterOptions } from "../src/interfaces/reporter-options.interface";
 import { describe, it, expect, test, jest } from "@jest/globals";
+import { Status } from "../src/enums/status.enum";
 
 describe("Cypress QATouch reporter", () => {
   const reporterOptions: ReporterOptions = {
@@ -11,17 +12,18 @@ describe("Cypress QATouch reporter", () => {
     testRunKey: "my-test-run-key",
   };
 
-  const runner: Mocha.Runner = new Runner(new Suite("Test suite"));
+  const runner: Runner = new Runner(new Suite("Test suite"), false);
   let reporter: CypressQaTouchReporter;
 
   beforeEach(() => {
+    console.warn = jest.fn();
     reporter = new CypressQaTouchReporter(runner, {
       reporterOptions,
     });
   });
 
   afterEach(() => {
-    runner.dispose();
+    runner.abort();
   });
 
   it("should instantiate reporter", () => {
@@ -56,8 +58,9 @@ describe("Cypress QATouch reporter", () => {
       `should call push method on %s`,
       (name: string) => {
         reporter.push = jest.fn(() => null);
-        runner.emit(name, new Test(name));
-        expect(reporter.push).toHaveBeenCalledWith(events[name], name);
+        const test = new Test(name);
+        runner.emit(name, test);
+        expect(reporter.push).toHaveBeenCalledWith(test, events[name]);
       }
     );
   });
@@ -65,14 +68,14 @@ describe("Cypress QATouch reporter", () => {
   describe("Data push", () => {
     it("should start the spawn process when testResultKey is provided", () => {
       // eslint-disable-next-line @typescript-eslint/dot-notation
-      reporter["__process"] = {
+      reporter["_process"] = {
         command: "true",
         args: [],
       };
 
       const process = reporter.push(
-        "passed",
-        "[QATouch-testKey] This is a test"
+        new Test("[QATouch-testKey] This is a test"),
+        Status.failed
       );
 
       expect(process).not.toBeNull();
@@ -87,7 +90,10 @@ describe("Cypress QATouch reporter", () => {
 
     it("should not spawn a process when testResultKey is not provided", () => {
       console.warn = jest.fn();
-      const process = reporter.push("passed", "[foo-testKey] This is a test");
+      const process = reporter.push(
+        new Test("[foo-testKey] This is a test"),
+        Status.failed
+      );
 
       expect(console.warn).toHaveBeenCalled();
       expect(process).toBeNull();

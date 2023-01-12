@@ -34,6 +34,7 @@ const cypressJsonConfig = {
     apiToken: "your_api_token",
     projectKey: "your_project_key",
     testRunKey: "your_test_run_key",
+    screenshotsFolder: "path_to_your_screenshot_folder", // optional - only if you want to upload screenshots of your tests to QATouch
   },
 };
 ```
@@ -51,6 +52,7 @@ const cypressJsonConfig = {
       apiToken: "your_api_token",
       projectKey: "your_project_key",
       testRunKey: "your_test_run_key",
+      screenshotsFolder: "path_to_your_screenshot_folder", // optional - only if you want to upload screenshots of your tests to QATouch
     },
   },
 };

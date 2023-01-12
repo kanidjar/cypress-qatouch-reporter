@@ -1,6 +1,6 @@
 {
   "name": "@kanidjar/cypress-qatouch-reporter",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Push Cypress test results into QA Touch ",
   "main": "dist/index.js",
   "scripts": {
@@ -30,6 +30,7 @@
   "homepage": "https://github.com/kanidjar/cypress-qatouch-reporter#readme",
   "devDependencies": {
     "@fluffy-spoon/substitute": "^1.208.0",
+    "@types/glob": "^8.0.0",
     "@types/mocha": "^10.0.0",
     "@types/node": "^18.8.3",
     "@typescript-eslint/eslint-plugin": "^5.39.0",
@@ -52,6 +53,8 @@
     "cypress": ">8.0.0"
   },
   "dependencies": {
-    "axios": "^1.1.2"
+    "axios": "^1.1.2",
+    "form-data": "^4.0.0",
+    "glob": "^8.0.3"
   }
 }
